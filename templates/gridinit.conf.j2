@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+[Service.{{ service.name | d(openio_service_gridinit_service_name) }}]
+command={{ service.command}}
+enabled={{ service.enabled | d('true') }}
+start_at_boot={{ service.start_at_boot | d('true') }}
+on_die={{ service.on_die | d('respawn') }}
+group={{ service.group | d([openio_service_namespace,openio_service_type,openio_service_id] | join(',')) }}
+uid={{ service.uid | d('openio') }}
+gid={{ service.gid | d('openio') }}
+{% set default_env = {"PATH": "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"} %}
+{% set env = default_env | combine(service.env | d({})) %}
+{% for k,v in env.items() %}
+env.{{ k }}={{ v }}
+{% endfor %}
+{% set limit = service.limit | d({}) %}
+{% for k,v in limit.items() %}
+limit.{{ k }}={{ v }}
+{% endfor %}

@@ -1,0 +1,55 @@
+---
+openio_service_namespace: "{{ namespace | default('OPENIO') }}"
+
+# openio_service_type
+openio_service_id: 0
+openio_service_name: "{{ openio_service_type }}-{{ openio_service_id }}"
+openio_service_gridinit_service_name: "{{ openio_service_namespace }}-{{ openio_service_name }}"
+openio_service_gridinit_dir: "/etc/gridinit.d/{{ openio_service_namespace }}"
+openio_service_gridinit_file_prefix: ""
+openio_service_inventory_dir: "/etc/oio/sds/{{ openio_service_namespace }}/inventory"
+openio_service_inventory_file: "{{ openio_service_inventory_dir }}/{{ openio_service_name }}.yml"
+openio_service_package_upgrade: "{{ openio_package_upgrade | d(false) }}"
+openio_service_conf_dir: "/etc/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"
+openio_service_log_dir: "/var/log/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"
+openio_service_volume: "/var/lib/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"
+openio_service_provision_only: false
+
+openio_service_state: present
+
+openio_service_packages: []
+# openio_service_packages:
+#   - openio-sds-common
+#   - openio-*swift*
+#   - oio-exporter=1.42.0
+#
+
+openio_service_directories: []
+# openio_service_directories:
+#   - path: /path/to/directory
+#     owner: root (openio by default)
+#     group: root (openio by default)
+#     mode: '0755' ('0750' by default)
+
+openio_service_configuration_files: []
+# openio_service_configuration_files:
+#   - name: toto.conf
+#   - dir: /tmp (openio_service_conf_dir by default)
+#   - template: mytemplate.j2 (name.j2 by default)
+
+openio_service_services: []
+# openio_service_services:
+#   - command: "/path/to/command arg1 arg2"
+#     name: myservice (openio_service_name by default)
+#     enabled: false (true by default)
+#     start_at_boot: false (true by default)
+#     on_die: respawn (respawn by default)
+#     group: group1,group2 (namespace,service_type,service_id by default)
+#     uid: root (openio by default)
+#     gid: root (openio by default)
+#     env: ({PATH: /usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin} by default)
+#       JAVA_HOME: /usr/share/java
+#     limit: ({} by default)
+#       stack_size: 123456
+#    
+...

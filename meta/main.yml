@@ -1,0 +1,8 @@
+galaxy_info:
+  author: Jérôme Loyet
+  description: Role that manage OpenIO services
+  company: OpenIO
+  license: AGPLv3
+  min_ansible_version: 2.9
+  galaxy_tags: []
+dependencies: []

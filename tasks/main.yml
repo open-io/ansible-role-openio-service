@@ -1,0 +1,84 @@
+---
+- name: "Check string variable"
+  assert:
+    quiet: true
+    that:
+      - "{{ item }} is defined"
+      - "{{ item }} is string"
+      - "{{ item }} | length > 0"
+    fail_msg: "'{{ item }}' is not defined or empty"
+  loop:
+    - openio_service_type
+    - openio_service_name
+
+- name: "[{{ openio_service_name }}] Check array variable"
+  assert:
+    quiet: true
+    that:
+      - "{{ item }} is defined"
+      - "{{ item }} is not string"
+      - "{{ item }} is not mapping"
+      - "{{ item }} is sequence"
+    fail_msg: "'{{ item }}' is not defined or not an array"
+  loop:
+    - openio_service_packages
+    - openio_service_directories
+    - openio_service_configuration_files
+    - openio_service_services
+
+
+
+
+- name: "[{{ openio_service_name }}] Install packages"
+  package:
+    name: "{{ openio_service_packages }}"
+    state: "{{ 'latest' if openio_service_package_upgrade else 'present' }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+  register: _packages
+  until: _packages is success
+  retries: 10
+  delay: 2
+  tags: install
+  when: openio_service_packages | length > 0
+
+
+
+
+- name: "[{{ openio_service_name }}] Create directories"
+  file:
+    state: directory
+    path: "{{ item.path }}"
+    mode: "{{ item.mode | d('0750') }}"
+    owner: "{{ item.owner | d('openio') }}"
+    group: "{{ item.group | d('openio') }}"
+  register: _register_directories
+  loop: "{{ openio_service_directories + _service_directories }}"
+
+
+
+
+- name: "[{{ openio_service_name }}] install configuration files"
+  template:
+    src: "{{ src }}"
+    dest: "{{ dest }}"
+    mode: "{{ item.mode | d('0640') }}"
+    owner: "{{ item.owner | d('openio') }}"
+    group: "{{ item.group | d('openio') }}"
+  vars:
+    src: "{{ item.template | d(item.name + '.j2') }}"
+    dest: "{{ item.dir | d(openio_service_conf_dir) }}/{{ item.name }}"
+  register: _register_configuration_files
+  loop: "{{ openio_service_configuration_files }}"
+  loop_control:
+    label: "{{ dest }}"
+
+
+
+
+- name: "[{{ openio_service_name }}] Manage services"
+  include_tasks: service.yml
+  loop: "{{ openio_service_services }}"
+  loop_control:
+    label: "{{ service.name | d(openio_service_name) }}"
+    loop_var: service
+...

@@ -1,0 +1,7 @@
+---
+_service_directories:
+  - path: "{{ openio_service_gridinit_dir }}"
+  - path: "{{ openio_service_inventory_dir }}"
+  - path: "{{ openio_service_conf_dir }}"
+  - path: "{{ openio_service_log_dir }}"
+...
