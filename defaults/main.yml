@@ -52,4 +52,43 @@ openio_service_services: []
 #     limit: ({} by default)
 #       stack_size: 123456
 #    
+
+openio_service_checks: []
+# openio_service_checks:
+#   # URI
+#   - uri: # same as uri module parameters: https://docs.ansible.com/ansible/latest/modules/uri_module.html
+#       url: "http://{{ openio_grafana_bind_address }}:{{ openio_grafana_bind_port }}/api/health"
+#     until: "_return is success"
+#     retries: 5
+#     delay: 2
+#     failed_when: "_return is failed"
+#     changed_when: false
+#
+#   # Command
+#   - command: # same as command module parameters: https://docs.ansible.com/ansible/latest/modules/command_module.html
+#       cmd: oio-tool ping 172.30.0.111:6120
+#     until: "_return is success"
+#     retries: 5
+#     delay: 2
+#     failed_when: "_return is failed"
+#     changed_when: false
+#
+#   # Shell
+#   - shell: # same as shell module parameters: https://docs.ansible.com/ansible/latest/modules/shell_module.html
+#       cmd: "false || true"
+#     until: "_return is success"
+#     retries: 5
+#     delay: 2
+#     failed_when: "_return is failed"
+#     changed_when: false
+#
+#   # Wait For
+#   - wait_for: # same as wait_for module parameters: https://docs.ansible.com/ansible/latest/modules/wait_for_module.html
+#       host: "{{ openio_grafana_bind_address }}"
+#       port: "{{ openio_grafana_bind_port }}"
+#     until: "_return is success"
+#     retries: 5
+#     delay: 2
+#     failed_when: "_return is failed"
+#     changed_when: false
 ...
