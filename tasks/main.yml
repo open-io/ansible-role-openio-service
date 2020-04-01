@@ -10,6 +10,9 @@
   loop:
     - openio_service_type
     - openio_service_name
+  tags:
+    - configure
+    - install
 
 - name: "[{{ openio_service_name }}] Check array variable"
   assert:
@@ -25,6 +28,9 @@
     - openio_service_directories
     - openio_service_configuration_files
     - openio_service_services
+  tags:
+    - configure
+    - install
 
 
 
@@ -53,6 +59,7 @@
     group: "{{ item.group | d('openio') }}"
   register: _register_directories
   loop: "{{ openio_service_directories + _service_directories }}"
+  tags: configure
 
 
 
@@ -75,6 +82,7 @@
   loop: "{{ openio_service_configuration_files }}"
   loop_control:
     label: "{{ dest }}"
+  tags: configure
 
 
 
@@ -130,6 +138,7 @@
   loop: "{{ openio_service_checks | selectattr('uri', 'defined') | list }}"
   loop_control:
     label: "{{ item.uri.url }}"
+  tags: configure
 
 - name: "[{{ openio_service_name }}] Check Port"
   wait_for:
@@ -157,6 +166,7 @@
   loop: "{{ openio_service_checks | selectattr('wait_for', 'defined') | list }}"
   loop_control:
     label: "tcp://{{ item.wait_for.host ~ ':' ~ item.wait_for.port }}"
+  tags: configure
 
 - name: "[{{ openio_service_name }}] Check Command"
   command:
@@ -180,6 +190,7 @@
   loop: "{{ openio_service_checks | selectattr('command', 'defined') | list }}"
   loop_control:
     label: "`{{ item.command.cmd }}`"
+  tags: configure
 
 - name: "[{{ openio_service_name }}] Check Shell"
   shell:
@@ -203,4 +214,5 @@
   loop: "{{ openio_service_checks | selectattr('shell', 'defined') | list }}"
   loop_control:
     label: "`{{ item.shell.cmd }}`"
+  tags: configure
 ...
