@@ -117,6 +117,7 @@
     headers: "{{ uri.headers | d(omit) }}"
     http_agent: "{{ uri.http_agent | d(omit) }}"
     method: "{{ uri.method | d(omit) }}"
+    password: "{{ uri.password | d(omit) }}"
     remote_src: "{{ uri.remote_src | d(omit) }}"
     return_content: "{{ uri.return_content | d(omit) }}"
     src: "{{ uri.src | d(omit) }}"
@@ -124,6 +125,7 @@
     timeout: "{{ uri.timeout | d(5) | int }}"
     url_password: "{{ uri.url_password | d(omit) }}"
     url_username: "{{ uri.url_username | d(omit) }}"
+    user: "{{ uri.user | d(omit) }}"
     use_proxy: "{{ uri.use_proxy | d(omit) }}"
     validate_certs: "{{ uri.validate_certs | d(omit) }}"
   register: _return
