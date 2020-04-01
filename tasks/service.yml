@@ -12,14 +12,14 @@
 - name: "[{{ openio_service_name }}] Reload gridinit if conf file has changed"
   command: /usr/bin/gridinit_cmd reload
   when:
+    - not openio_service_maintenance_mode | bool
     - _register_gridinit_conf is changed
-    - not openio_service_provision_only
   tags: configure
 
 - name: "[{{ openio_service_name }}] (re)start service if something has changed"
   command: "/usr/bin/gridinit_cmd restart {{ openio_service_gridinit_service_name }}"
   when:
+    - not openio_service_maintenance_mode | bool
     - _register_gridinit_conf is changed or _register_directories is changed or _register_configuration_files is changed
-    - not openio_service_provision_only
   tags: configure
 ...

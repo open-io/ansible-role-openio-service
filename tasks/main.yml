@@ -136,7 +136,9 @@
   changed_when: "{{ item.changed_when | d(false) }}"
   vars:
     uri: "{{ item.uri }}"
-  when: "'uri' in item and item.uri.url is string and item.uri.url | length > 0"
+  when:
+    - not openio_service_maintenance_mode | bool
+    - "'uri' in item and item.uri.url is string and item.uri.url | length > 0"
   loop: "{{ openio_service_checks | selectattr('uri', 'defined') | list }}"
   loop_control:
     label: "{{ item.uri.url }}"
@@ -164,7 +166,9 @@
   until: "{{ item.until | d('_return is success') }}"
   failed_when: "{{ item.failed_when | d('not (' ~ (item.until | d('_return is success')) ~ ')') }}"
   changed_when: "{{ item.changed_when | d(false) }}"
-  when: "'wait_for' in item and item.wait_for.host is string and item.wait_for.port is defined"
+  when:
+    - not openio_service_maintenance_mode | bool
+    - "'wait_for' in item and item.wait_for.host is string and item.wait_for.port is defined"
   loop: "{{ openio_service_checks | selectattr('wait_for', 'defined') | list }}"
   loop_control:
     label: "tcp://{{ item.wait_for.host ~ ':' ~ item.wait_for.port }}"
@@ -188,7 +192,9 @@
   until: "{{ item.until | d('_return is success') }}"
   failed_when: "{{ item.failed_when | d('not (' ~ (item.until | d('_return is success')) ~ ')') }}"
   changed_when: "{{ item.changed_when | d(false) }}"
-  when: "'command' in item and item.command.cmd is string and item.command.cmd | length > 0"
+  when:
+    - not openio_service_maintenance_mode | bool
+    - "'command' in item and item.command.cmd is string and item.command.cmd | length > 0"
   loop: "{{ openio_service_checks | selectattr('command', 'defined') | list }}"
   loop_control:
     label: "`{{ item.command.cmd }}`"
@@ -212,7 +218,9 @@
   until: "{{ item.until | d('_return is success') }}"
   failed_when: "{{ item.failed_when | d('not (' ~ (item.until | d('_return is success')) ~ ')') }}"
   changed_when: "{{ item.changed_when | d(false) }}"
-  when: "'shell' in item and item.shell.cmd is string and item.shell.cmd | length > 0"
+  when:
+    - not openio_service_maintenance_mode | bool
+    - "'shell' in item and item.shell.cmd is string and item.shell.cmd | length > 0"
   loop: "{{ openio_service_checks | selectattr('shell', 'defined') | list }}"
   loop_control:
     label: "`{{ item.shell.cmd }}`"
