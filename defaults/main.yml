@@ -1,5 +1,6 @@
 ---
 openio_service_namespace: "{{ namespace | default('OPENIO') }}"
+openio_service_maintenance_mode: "{{ openio_maintenance_mode | d(false) }}"
 
 # openio_service_type
 openio_service_id: 0
@@ -13,7 +14,6 @@ openio_service_package_upgrade: "{{ openio_package_upgrade | d(false) }}"
 openio_service_conf_dir: "/etc/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"
 openio_service_log_dir: "/var/log/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"
 openio_service_volume: "/var/lib/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"
-openio_service_provision_only: false
 
 openio_service_state: present
 
