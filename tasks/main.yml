@@ -64,6 +64,10 @@
     mode: "{{ item.mode | d('0640') }}"
     owner: "{{ item.owner | d('openio') }}"
     group: "{{ item.group | d('openio') }}"
+    block_start_string: "{{ item.block_start_string | d('{%') }}"
+    block_end_string: "{{ item.block_end_string | d('%}') }}"
+    variable_start_string: "{{ item.variable_start_string | d('{{') }}"
+    variable_end_string: "{{ item.variable_end_string | d('}}') }}"
   vars:
     src: "{{ item.template | d(item.name + '.j2') }}"
     dest: "{{ item.dir | d(openio_service_conf_dir) }}/{{ item.name }}"
