@@ -85,4 +85,122 @@
   loop_control:
     label: "{{ service.name | d(openio_service_name) }}"
     loop_var: service
+
+#
+# CHECK service by uri, port, command or shell
+#
+# The following tasks issue a warning :
+#   [WARNING]: conditional statements should not include jinja2 templating delimiters such as {{ }} or {% %}.
+# This is a normal behaviour and we can't do anything to change this
+# We will have to live with it
+#
+- name: "[{{ openio_service_name }}] Check URL"
+  uri:
+    url: "{{ uri.url }}"
+    body: "{{ uri.body | d(omit) }}"
+    body_format: "{{ uri.body_format | d(omit) }}"
+    client_cert: "{{ uri.client_cert | d(omit) }}"
+    client_key: "{{ uri.client_key | d(omit) }}"
+    creates: "{{ uri.creates | d(omit) }}"
+    dest: "{{ uri.dest | d(omit) }}"
+    follow_redirects: "{{ uri.follow_redirects | d(omit) }}"
+    force: "{{ uri.force | d(omit) }}"
+    force_basic_auth: "{{ uri.force_basic_auth | d(omit) }}"
+    headers: "{{ uri.headers | d(omit) }}"
+    http_agent: "{{ uri.http_agent | d(omit) }}"
+    method: "{{ uri.method | d(omit) }}"
+    remote_src: "{{ uri.remote_src | d(omit) }}"
+    return_content: "{{ uri.return_content | d(omit) }}"
+    src: "{{ uri.src | d(omit) }}"
+    status_code: "{{ uri.status_code | d(200) | int }}"
+    timeout: "{{ uri.timeout | d(5) | int }}"
+    url_password: "{{ uri.url_password | d(omit) }}"
+    url_username: "{{ uri.url_username | d(omit) }}"
+    use_proxy: "{{ uri.use_proxy | d(omit) }}"
+    validate_certs: "{{ uri.validate_certs | d(omit) }}"
+  register: _return
+  delay: "{{ item.delay | d(2) | int }}"
+  retries: "{{ item.retries | d(5) | int }}"
+  until: "{{ item.until | d('_return is success') }}"
+  failed_when: "{{ item.failed_when | d('not (' ~ (item.until | d('_return is success')) ~ ')') }}"
+  changed_when: "{{ item.changed_when | d(false) }}"
+  vars:
+    uri: "{{ item.uri }}"
+  when: "'uri' in item and item.uri.url is string and item.uri.url | length > 0"
+  loop: "{{ openio_service_checks | selectattr('uri', 'defined') | list }}"
+  loop_control:
+    label: "{{ item.uri.url }}"
+
+- name: "[{{ openio_service_name }}] Check Port"
+  wait_for:
+    host: "{{ wait_for.host }}"
+    port: "{{ wait_for.port }}"
+    active_connection_states: "{{ wait_port.active_connection_states | d(omit) }}"
+    connect_timeout: "{{ wait_port.connect_timeout | d(omit) }}"
+    delay: "{{ wait_port.delay | d(omit) }}"
+    exclude_hosts: "{{ wait_port.exclude_hosts | d(omit) }}"
+    msg: "{{ wait_port.msg | d(omit) }}"
+    path: "{{ wait_port.path | d(omit) }}"
+    search_regex: "{{ wait_port.search_regex | d(omit) }}"
+    sleep: "{{ wait_port.sleep | d(omit) }}"
+    state: "{{ wait_port.state | d(omit) }}"
+    timeout: "{{ wait_port.timeout | d(5) | int }}"
+  register: _return
+  delay: "{{ item.delay | d(2) | int }}"
+  retries: "{{ item.retries | d(5) | int }}"
+  vars:
+    wait_for: "{{ item.wait_for }}"
+  until: "{{ item.until | d('_return is success') }}"
+  failed_when: "{{ item.failed_when | d('not (' ~ (item.until | d('_return is success')) ~ ')') }}"
+  changed_when: "{{ item.changed_when | d(false) }}"
+  when: "'wait_for' in item and item.wait_for.host is string and item.wait_for.port is defined"
+  loop: "{{ openio_service_checks | selectattr('wait_for', 'defined') | list }}"
+  loop_control:
+    label: "tcp://{{ item.wait_for.host ~ ':' ~ item.wait_for.port }}"
+
+- name: "[{{ openio_service_name }}] Check Command"
+  command:
+    cmd: "{{ command.cmd }}"
+    chdir: "{{ command.chdir | d(omit) }}"
+    creates: "{{ command.creates | d(omit) }}"
+    removes: "{{ command.removes | d(omit) }}"
+    stdin: "{{ command.stdin | d(omit) }}"
+    stdin_add_newline: "{{ command.stdin_add_newline | d(omit) }}"
+    strip_empty_ends: "{{ command.strip_empty_ends | d(omit) }}"
+    warn: "{{ command.warn | d(omit) }}"
+  register: _return
+  delay: "{{ item.delay | d(2) | int }}"
+  retries: "{{ item.retries | d(5) | int }}"
+  vars:
+    command: "{{ item.command }}"
+  until: "{{ item.until | d('_return is success') }}"
+  failed_when: "{{ item.failed_when | d('not (' ~ (item.until | d('_return is success')) ~ ')') }}"
+  changed_when: "{{ item.changed_when | d(false) }}"
+  when: "'command' in item and item.command.cmd is string and item.command.cmd | length > 0"
+  loop: "{{ openio_service_checks | selectattr('command', 'defined') | list }}"
+  loop_control:
+    label: "`{{ item.command.cmd }}`"
+
+- name: "[{{ openio_service_name }}] Check Shell"
+  shell:
+    cmd: "{{ shell.cmd }}"
+    chdir: "{{ shell.chdir | d(omit) }}"
+    creates: "{{ shell.creates | d(omit) }}"
+    executable: "{{ shell.executable | d(omit) }}"
+    removes: "{{ shell.removes | d(omit) }}"
+    stdin: "{{ shell.stdin | d(omit) }}"
+    stdin_as_newline: "{{ shell.stdin_as_newline | d(omit) }}"
+    warn: "{{ shell.warn | d(omit) }}"
+  register: _return
+  delay: "{{ item.delay | d(2) | int }}"
+  retries: "{{ item.retries | d(5) | int }}"
+  vars:
+    shell: "{{ item.shell }}"
+  until: "{{ item.until | d('_return is success') }}"
+  failed_when: "{{ item.failed_when | d('not (' ~ (item.until | d('_return is success')) ~ ')') }}"
+  changed_when: "{{ item.changed_when | d(false) }}"
+  when: "'shell' in item and item.shell.cmd is string and item.shell.cmd | length > 0"
+  loop: "{{ openio_service_checks | selectattr('shell', 'defined') | list }}"
+  loop_control:
+    label: "`{{ item.shell.cmd }}`"
 ...
