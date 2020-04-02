@@ -1,0 +1,34 @@
+---
+#
+# This module issue a warning :
+#   [WARNING]: conditional statements should not include jinja2 templating delimiters such as {{ }} or {% %}.
+# This is a normal behaviour and we can't do anything to change this
+# We will have to live with it
+#
+- name: "[{{ openio_service_name }}] Check Port {{ label }}"
+  wait_for:
+    host: "{{ wait_for.host }}"
+    port: "{{ wait_for.port }}"
+    active_connection_states: "{{ wait_port.active_connection_states | d(omit) }}"
+    connect_timeout: "{{ wait_port.connect_timeout | d(omit) }}"
+    delay: "{{ wait_port.delay | d(omit) }}"
+    exclude_hosts: "{{ wait_port.exclude_hosts | d(omit) }}"
+    msg: "{{ wait_port.msg | d(omit) }}"
+    path: "{{ wait_port.path | d(omit) }}"
+    search_regex: "{{ wait_port.search_regex | d(omit) }}"
+    sleep: "{{ wait_port.sleep | d(omit) }}"
+    state: "{{ wait_port.state | d(omit) }}"
+    timeout: "{{ wait_port.timeout | d(5) | int }}"
+  register: _return
+  delay: "{{ item.delay | d(2) | int }}"
+  retries: "{{ item.retries | d(5) | int }}"
+  vars:
+    wait_for: "{{ item.wait_for }}"
+  until: "{{ item.until | d('_return is success') }}"
+  failed_when: "{{ item.failed_when | d('not (' ~ (item.until | d('_return is success')) ~ ')') }}"
+  changed_when: "{{ item.changed_when | d(false) }}"
+  when:
+    - not openio_service_maintenance_mode | bool
+    - "'wait_for' in item and item.wait_for.host is string and item.wait_for.port is defined"
+  tags: configure
+...

@@ -50,7 +50,7 @@ openio_service_services: []
 #     enabled: false (true by default)
 #     start_at_boot: false (true by default)
 #     on_die: respawn (respawn by default)
-#     group: group1,group2 (openio_service_gridinit_default_group by default)
+#     group: group1,group2 ({{ openio_service_gridinit_default_group }} by default)
 #     uid: root (openio by default)
 #     gid: root (openio by default)
 #     env: ({PATH: /usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin} by default)
