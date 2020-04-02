@@ -34,12 +34,14 @@ openio_service_directories: []
 #     owner: root (openio by default)
 #     group: root (openio by default)
 #     mode: '0755' ('0750' by default)
+#     other parameters from the `file` module
 
 openio_service_configuration_files: []
 # openio_service_configuration_files:
 #   - name: toto.conf
-#   - dir: /tmp (openio_service_conf_dir by default)
-#   - template: mytemplate.j2 (name.j2 by default)
+#     dir: /tmp (openio_service_conf_dir by default)
+#     template: mytemplate.j2 (name.j2 by default)
+#     # other parameters from the template module
 
 openio_service_services: []
 # openio_service_services:
