@@ -17,6 +17,8 @@ openio_service_volume: "/var/lib/oio/sds/{{ openio_service_namespace }}/{{ openi
 
 openio_service_syslog_tag: "OIO,{{ openio_service_namespace }},{{ openio_service_type }},{{ openio_service_id }}"
 
+openio_service_gridinit_default_group: "{{ [openio_service_namespace,openio_service_type,openio_service_id] | join(',') }}"
+
 openio_service_state: present
 
 openio_service_packages: []
@@ -46,7 +48,7 @@ openio_service_services: []
 #     enabled: false (true by default)
 #     start_at_boot: false (true by default)
 #     on_die: respawn (respawn by default)
-#     group: group1,group2 (namespace,service_type,service_id by default)
+#     group: group1,group2 (openio_service_gridinit_default_group by default)
 #     uid: root (openio by default)
 #     gid: root (openio by default)
 #     env: ({PATH: /usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin} by default)
