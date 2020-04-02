@@ -1,0 +1,30 @@
+---
+#
+# This module issue a warning :
+#   [WARNING]: conditional statements should not include jinja2 templating delimiters such as {{ }} or {% %}.
+# This is a normal behaviour and we can't do anything to change this
+# We will have to live with it
+#
+- name: "[{{ openio_service_name }}] Check Shell {{ label }}"
+  shell:
+    cmd: "{{ shell.cmd }}"
+    chdir: "{{ shell.chdir | d(omit) }}"
+    creates: "{{ shell.creates | d(omit) }}"
+    executable: "{{ shell.executable | d(omit) }}"
+    removes: "{{ shell.removes | d(omit) }}"
+    stdin: "{{ shell.stdin | d(omit) }}"
+    stdin_as_newline: "{{ shell.stdin_as_newline | d(omit) }}"
+    warn: "{{ shell.warn | d(omit) }}"
+  register: _return
+  delay: "{{ item.delay | d(2) | int }}"
+  retries: "{{ item.retries | d(5) | int }}"
+  vars:
+    shell: "{{ item.shell }}"
+  until: "{{ item.until | d('_return is success') }}"
+  failed_when: "{{ item.failed_when | d('not (' ~ (item.until | d('_return is success')) ~ ')') }}"
+  changed_when: "{{ item.changed_when | d(false) }}"
+  when:
+    - not openio_service_maintenance_mode | bool
+    - "'shell' in item and item.shell.cmd is string and item.shell.cmd | length > 0"
+  tags: configure
+...

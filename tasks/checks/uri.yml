@@ -1,0 +1,46 @@
+---
+#
+# This module issue a warning :
+#   [WARNING]: conditional statements should not include jinja2 templating delimiters such as {{ }} or {% %}.
+# This is a normal behaviour and we can't do anything to change this
+# We will have to live with it
+#
+- name: "[{{ openio_service_name }}] Check URL {{ label }}"
+  uri:
+    url: "{{ uri.url }}"
+    body: "{{ uri.body | d(omit) }}"
+    body_format: "{{ uri.body_format | d(omit) }}"
+    client_cert: "{{ uri.client_cert | d(omit) }}"
+    client_key: "{{ uri.client_key | d(omit) }}"
+    creates: "{{ uri.creates | d(omit) }}"
+    dest: "{{ uri.dest | d(omit) }}"
+    follow_redirects: "{{ uri.follow_redirects | d(omit) }}"
+    force: "{{ uri.force | d(omit) }}"
+    force_basic_auth: "{{ uri.force_basic_auth | d(omit) }}"
+    headers: "{{ uri.headers | d(omit) }}"
+    http_agent: "{{ uri.http_agent | d(omit) }}"
+    method: "{{ uri.method | d(omit) }}"
+    password: "{{ uri.password | d(omit) }}"
+    remote_src: "{{ uri.remote_src | d(omit) }}"
+    return_content: "{{ uri.return_content | d(omit) }}"
+    src: "{{ uri.src | d(omit) }}"
+    status_code: "{{ uri.status_code | d(200) | int }}"
+    timeout: "{{ uri.timeout | d(5) | int }}"
+    url_password: "{{ uri.url_password | d(omit) }}"
+    url_username: "{{ uri.url_username | d(omit) }}"
+    user: "{{ uri.user | d(omit) }}"
+    use_proxy: "{{ uri.use_proxy | d(omit) }}"
+    validate_certs: "{{ uri.validate_certs | d(omit) }}"
+  register: _return
+  delay: "{{ item.delay | d(2) | int }}"
+  retries: "{{ item.retries | d(5) | int }}"
+  until: "{{ item.until | d('_return is success') }}"
+  failed_when: "{{ item.failed_when | d('not (' ~ (item.until | d('_return is success')) ~ ')') }}"
+  changed_when: "{{ item.changed_when | d(false) }}"
+  vars:
+    uri: "{{ item.uri }}"
+  when:
+    - not openio_service_maintenance_mode | bool
+    - "'uri' in item and item.uri.url is string and item.uri.url | length > 0"
+  tags: configure
+...
