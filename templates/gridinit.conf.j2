@@ -1,6 +1,26 @@
 # {{ ansible_managed }}
 [Service.{{ service.name | d(openio_service_gridinit_service_name) }}]
+{% if 'redirect_stdout_to_syslog' in service %}
+{%   set command="/usr/bin/openio_syslog_logger" %}
+{%   set facility = "" %}
+{%   set pid = " -p" %}
+{%   set ident = ' -i "' ~ openio_service_syslog_tag ~ '"'%}
+{%   if service.redirect_stdout_to_syslog is mapping %}
+{%     if 'facility' in service.redirect_stdout_to_syslog and service.redirect_stdout_to_syslog.facility %}
+{%       set facility = ' -f ' ~ service.redirect_stdout_to_syslog.facility %}
+{%     endif %}
+{%     if 'pid' in service.redirect_stdout_to_syslog and not service.redirect_stdout_to_syslog.pid %}
+{%       set pid="" %}
+{%     endif %}
+{%     if 'ident' in service.redirect_stdout_to_syslog and service.redirect_stdout_to_syslog.ident %}
+{%       set command= command ~ ' -i ' ~ service.redirect_stdout_to_syslog.ident %}
+{%     endif %}
+{%   endif %}
+{%   set command= command ~ facility ~ pid ~ ident ~ ' -- ' ~ service.command %}
+command={{ command}}
+{% else %}
 command={{ service.command}}
+{% endif %}
 enabled={{ service.enabled | d('true') }}
 start_at_boot={{ service.start_at_boot | d('true') }}
 on_die={{ service.on_die | d('respawn') }}
