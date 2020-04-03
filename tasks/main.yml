@@ -34,6 +34,48 @@
     - configure
     - install
 
+- name: "[{{ openio_service_name }}] Load variables"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+  tags:
+    - configure
+    - install
+
+#
+# Install syslog logger with dependencies
+#
+- name: "[{{ openio_service_name }}] Install syslog logger"
+  block:
+  - name: "[{{ openio_service_name }}] Install setproctitle package"
+    package:
+      name: "{{ _service_setproctitle_package }}"
+      state: present
+    ignore_errors: "{{ ansible_check_mode }}"
+    register: _packages
+    until: _packages is success
+    retries: 10
+    delay: 2
+
+  - name: "[{{ openio_service_name }}] Install openio_syslog_logger"
+    copy:
+      src: "openio_syslog_logger"
+      dest: "/usr/bin/openio_syslog_logger"
+      mode: '0755'
+      owner: 'root'
+      group: 'root'
+
+  - name: "[{{ openio_service_name }}] set _openio_service_logger_installed"
+    set_fact:
+      _openio_service_logger_installed: true
+      cacheable: no
+
+  when: "not _openio_service_logger_installed | d(false)"
+  tags: install
+  # end of block Install syslog logger
+  #
+
 #
 # Install packages
 #

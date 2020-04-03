@@ -14,9 +14,7 @@ openio_service_package_upgrade: "{{ openio_package_upgrade | d(false) }}"
 openio_service_conf_dir: "/etc/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"
 openio_service_log_dir: "/var/log/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"
 openio_service_volume: "/var/lib/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"
-
 openio_service_syslog_tag: "OIO,{{ openio_service_namespace }},{{ openio_service_type }},{{ openio_service_id }}"
-
 openio_service_gridinit_default_group: "{{ [openio_service_namespace,openio_service_type,openio_service_id] | join(',') }}"
 
 openio_service_state: present
@@ -46,6 +44,10 @@ openio_service_configuration_files: []
 openio_service_services: []
 # openio_service_services:
 #   - command: "/path/to/command arg1 arg2"
+#     redirect_stdout_to_syslog:
+#       facility: daemon
+#       ident = prout #openio_service_syslog_tag by default
+#       pid = true # to log pid
 #     name: myservice (openio_service_name by default)
 #     enabled: false (true by default)
 #     start_at_boot: false (true by default)
