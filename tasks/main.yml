@@ -103,6 +103,20 @@
   tags: configure
 
 #
+# Sysctl
+#
+- name: "[{{ openio_service_name }}] configure sysctl"
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    ignoreerrors: "{{ item.ignoreerrors | d(omit) }}"
+    reload: "{{ item.reload | d(omit) }}"
+    state: "{{ item.state | d(omit) }}"
+    sysctl_file: "{{ item.sysctl_file | d(openio_service_sysctl_file) }}"
+    sysctl_set: "{{ item.sysctl_set | d(omit) }}"
+  loop: "{{ openio_service_sysctl_entries }}"
+  tags: configure
+#
 # manager gridinit services
 #
 - name: "[{{ openio_service_name }}] Manage services"

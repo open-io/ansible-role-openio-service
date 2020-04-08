@@ -16,6 +16,8 @@ openio_service_log_dir: "/var/log/oio/sds/{{ openio_service_namespace }}/{{ open
 openio_service_volume: "/var/lib/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"
 openio_service_syslog_tag: "OIO,{{ openio_service_namespace }},{{ openio_service_type }},{{ openio_service_id }}"
 openio_service_gridinit_default_group: "{{ [openio_service_namespace,openio_service_type,openio_service_id] | join(',') }}"
+openio_service_sysctl_priority: 98
+openio_service_sysctl_file: "/etc/sysctl.d/{{ openio_service_sysctl_priority }}-{{ openio_service_type }}.conf"
 
 openio_service_state: present
 
@@ -40,6 +42,12 @@ openio_service_configuration_files: []
 #     dir: /tmp (openio_service_conf_dir by default)
 #     template: mytemplate.j2 (name.j2 by default)
 #     # other parameters from the template module
+
+openio_service_sysctl_entries: []
+# openio_service_sysctl_entries:
+#   - name: vm.max_map_count
+#     value: 262144
+#     other vaid option from the sysctl module: https://docs.ansible.com/ansible/latest/modules/sysctl_module.html
 
 openio_service_services: []
 # openio_service_services:

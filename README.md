@@ -28,6 +28,8 @@ An Ansible role for install openio_service. Specifically, the responsibilities o
 | `openio_service_volume` | `"/var/lib/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"` | |
 | `openio_service_syslog_tag` | `"OIO,{{ openio_service_namespace }},{{ openio_service_type }},{{ openio_service_id }}"` | |
 | `openio_service_gridinit_default_group` | `"{{ [openio_service_namespace,openio_service_type,openio_service_id] | join(',') }}"` | |
+| `openio_service_sysctl_priority` | `98` | sysctl file priority |
+| `openio_service_sysctl_file` | `"/etc/sysctl.d/{{ openio_service_sysctl_priority }}-{{ openio_service_type }}.conf"` | sysctl configuration file |
 | `openio_service_state` | `present` | |
 | `openio_service_packages` | `[]` | |
 | `openio_service_directories` | `[]` | |
