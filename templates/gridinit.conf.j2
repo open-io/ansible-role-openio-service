@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 [Service.{{ service.name | d(openio_service_gridinit_service_name) }}]
 {% if 'redirect_stdout_to_syslog' in service %}
-{%   set command="/usr/bin/openio_syslog_logger" %}
+{%   set command="/usr/bin/gridinit-syslog-logger" %}
 {%   set facility = "" %}
 {%   set pid = " -p" %}
 {%   set ident = ' -i "' ~ openio_service_syslog_tag ~ '"'%}
