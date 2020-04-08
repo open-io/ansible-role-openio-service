@@ -13,29 +13,29 @@ An Ansible role for install openio_service. Specifically, the responsibilities o
 
 | Variable   | Default | Comments (type)  |
 | :---       | :---    | :---             |
-| `openio_service_namespace` | `"{{ namespace | default('OPENIO') }}"` | |
-| `openio_service_maintenance_mode` | `"{{ openio_maintenance_mode | d(false) }}"` | |
-| `openio_service_id` | `0` | |
-| `openio_service_name` | `"{{ openio_service_type }}-{{ openio_service_id }}"` | |
-| `openio_service_gridinit_service_name` | `"{{ openio_service_namespace }}-{{ openio_service_name }}"` | |
-| `openio_service_gridinit_dir` | `"/etc/gridinit.d/{{ openio_service_namespace }}"` | |
-| `openio_service_gridinit_file_prefix` | `""` | |
-| `openio_service_inventory_dir` | `"/etc/oio/sds/{{ openio_service_namespace }}/inventory"` | |
-| `openio_service_inventory_file` | `"{{ openio_service_inventory_dir }}/{{ openio_service_name }}.yml"` | |
-| `openio_service_package_upgrade` | `"{{ openio_package_upgrade | d(false) }}"` | |
-| `openio_service_conf_dir` | `"/etc/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"` | |
-| `openio_service_log_dir` | `"/var/log/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"` | |
-| `openio_service_volume` | `"/var/lib/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"` | |
-| `openio_service_syslog_tag` | `"OIO,{{ openio_service_namespace }},{{ openio_service_type }},{{ openio_service_id }}"` | |
-| `openio_service_gridinit_default_group` | `"{{ [openio_service_namespace,openio_service_type,openio_service_id] | join(',') }}"` | |
+| `openio_service_namespace` | `"{{ namespace \| default('OPENIO') }}"` | OpenIO namespace |
+| `openio_service_maintenance_mode` | `"{{ openio_maintenance_mode \| d(false) }}"` | Maintenance mode|
+| `openio_service_id` | `0` | Service ID |
+| `openio_service_name` | `"{{ openio_service_type }}-{{ openio_service_id }}"` | Service name |
+| `openio_service_gridinit_service_name` | `"{{ openio_service_namespace }}-{{ openio_service_name }}"` | Gridinit service name|
+| `openio_service_gridinit_dir` | `"/etc/gridinit.d/{{ openio_service_namespace }}"` | Gridinit directory |
+| `openio_service_gridinit_file_prefix` | `""` | Gridinit prefix |
+| `openio_service_inventory_dir` | `"/etc/oio/sds/{{ openio_service_namespace }}/inventory"` | Inventory directory |
+| `openio_service_inventory_file` | `"{{ openio_service_inventory_dir }}/{{ openio_service_name }}.yml"` | Service inventory_file|
+| `openio_service_package_upgrade` | `"{{ openio_package_upgrade \| d(false) }}"` | Do we upgrade package during deployment ? |
+| `openio_service_conf_dir` | `"/etc/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"` | Service configuration directory |
+| `openio_service_log_dir` | `"/var/log/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"` | Service log directory |
+| `openio_service_volume` | `"/var/lib/oio/sds/{{ openio_service_namespace }}/{{ openio_service_name }}"` | Service volume directory (data) |
+| `openio_service_syslog_tag` | `"OIO,{{ openio_service_namespace }},{{ openio_service_type }},{{ openio_service_id }}"` | Service syslog tag|
+| `openio_service_gridinit_default_group` | `"{{ [openio_service_namespace,openio_service_type,openio_service_id] \| join(',') }}"` | Service gridinit default groups |
 | `openio_service_sysctl_priority` | `98` | sysctl file priority |
 | `openio_service_sysctl_file` | `"/etc/sysctl.d/{{ openio_service_sysctl_priority }}-{{ openio_service_type }}.conf"` | sysctl configuration file |
-| `openio_service_state` | `present` | |
-| `openio_service_packages` | `[]` | |
-| `openio_service_directories` | `[]` | |
-| `openio_service_configuration_files` | `[]` | |
-| `openio_service_services` | `[]` | |
-| `openio_service_checks` | `[]` | |
+| `openio_service_state` | `present` | Service state |
+| `openio_service_packages` | `[]` | Service packages |
+| `openio_service_directories` | `[]` | Service directories |
+| `openio_service_configuration_files` | `[]` | Service configuration files |
+| `openio_service_services` | `[]` | Gridinit services to launch |
+| `openio_service_checks` | `[]` | Service Checks to run at the end |
 
 ## Dependencies
 - https://github.com/open-io/ansible-role-gridinit
