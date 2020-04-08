@@ -65,7 +65,9 @@ openio_service_services: []
 #     gid: root (openio by default)
 #     env: ({PATH: /usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin} by default)
 #       JAVA_HOME: /usr/share/java
-#     limit: ({} by default)
+#     limits: ({} by default)
+#       max_files: 123456
+#       core_size: 123456
 #       stack_size: 123456
 #    
 

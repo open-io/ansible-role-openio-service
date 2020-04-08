@@ -32,7 +32,7 @@ gid={{ service.gid | d('openio') }}
 {% for k,v in env.items() %}
 env.{{ k }}={{ v }}
 {% endfor %}
-{% set limit = service.limit | d({}) %}
-{% for k,v in limit.items() %}
+{% set limits = service.limits | d({}) %}
+{% for k,v in limits.items() %}
 limit.{{ k }}={{ v }}
 {% endfor %}
