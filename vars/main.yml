@@ -4,4 +4,7 @@ _service_directories:
   - path: "{{ openio_service_inventory_dir }}"
   - path: "{{ openio_service_conf_dir }}"
   - path: "{{ openio_service_log_dir }}"
+    mode: "{{ '0750' if ansible_os_family == 'RedHat' else '0770' }}"
+    owner: "{{ 'openio' if ansible_os_family == 'RedHat' else 'syslog' }}"
+    group: "openio"
 ...
