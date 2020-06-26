@@ -42,5 +42,6 @@
   when:
     - not openio_service_maintenance_mode | bool
     - "'uri' in item and item.uri.url is string and item.uri.url | length > 0"
+  ignore_errors: "{{ ansible_check_mode }}"
   tags: configure
 ...
